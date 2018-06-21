@@ -1,6 +1,6 @@
 
 import java.io.IOException;
-import java.util.StringTokenizer;
+import java.lang.String;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -28,14 +28,18 @@ public class PaymentInfo {
         @Override
         protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
               String s=value.toString();
-              int fc=s.indexOf(",");
-              s=s.substring(fc+1);
               String[] arr=s.split(",");
-              IntWritable amount = new IntWritable(Integer.parseInt(arr[1]));
-              Text card = new Text(arr[2]);
-              context.write(card, amount);
+           try{
+              String a=arr[2];
+              String c=arr[3];
+              int x=Integer.parseInt(a);
+               context.write(new Text(c), new IntWritable(x));
+            }catch(Exception ee)
+            {
+             System.out.println(ee);
+            }
         }
-        }
+    }
     static class MyReducer extends Reducer<Text,IntWritable,Text,IntWritable>
     {
 
